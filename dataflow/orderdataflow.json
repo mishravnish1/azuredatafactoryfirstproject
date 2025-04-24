@@ -1,0 +1,62 @@
+{
+	"name": "orderdataflow",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_orders_csv_dl",
+						"type": "DatasetReference"
+					},
+					"name": "ordersinputstream"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_json_orders_output",
+						"type": "DatasetReference"
+					},
+					"name": "sinkordersdata"
+				}
+			],
+			"transformations": [
+				{
+					"name": "selectorders"
+				},
+				{
+					"name": "aggregateordersdata"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          order_id as string,",
+				"          order_date as string,",
+				"          order_customer_id as string,",
+				"          order_status as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> ordersinputstream",
+				"ordersinputstream select(mapColumn(",
+				"          order_id,",
+				"          customer_id = order_customer_id,",
+				"          order_status",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> selectorders",
+				"selectorders aggregate(groupBy(order_status),",
+				"     order_id = count(order_id)) ~> aggregateordersdata",
+				"aggregateordersdata sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sinkordersdata"
+			]
+		}
+	}
+}

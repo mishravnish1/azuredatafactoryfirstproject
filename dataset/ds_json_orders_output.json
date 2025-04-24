@@ -1,0 +1,20 @@
+{
+	"name": "ds_json_orders_output",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_adls_trendytechsac",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "result",
+				"fileSystem": "data"
+			}
+		},
+		"schema": {}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

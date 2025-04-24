@@ -1,0 +1,9 @@
+{
+	"name": "trendytechfa",
+	"location": "centralindia",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "be0e0f65-f127-42de-8207-c8a5bc377f13",
+		"tenantId": "c35cbf63-79f5-4cae-82fc-b273146bf221"
+	}
+}
